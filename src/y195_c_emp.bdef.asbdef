@@ -1,0 +1,26 @@
+projection;
+strict ( 2 );
+use draft;
+
+define behavior for Y195_C_EMP alias Employee
+{
+  use create;
+  use update;
+  use delete;
+
+  use association _LeaveRequests { create; with draft;}
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+}
+
+define behavior for Y195_C_LEAVE_REQ alias LeaveRequest
+{
+  use update;
+  use delete;
+
+  use association _Employee {with draft; }
+}

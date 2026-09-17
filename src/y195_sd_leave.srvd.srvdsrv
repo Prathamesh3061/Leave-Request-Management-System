@@ -1,0 +1,5 @@
+@EndUserText.label: 'Service Definition for Leave Request System'
+define service Y195_SD_LEAVE {
+  expose Y195_C_EMP       as Employee;
+  expose Y195_C_LEAVE_REQ as LeaveRequest;
+}

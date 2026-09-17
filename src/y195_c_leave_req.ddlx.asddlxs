@@ -1,0 +1,62 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: {
+    typeName: 'Leave Request',
+    typeNamePlural: 'Leave Requests',
+    title: { type: #STANDARD, value: 'LeaveType' }
+  }
+}
+annotate entity Y195_C_LEAVE_REQ with
+{
+  @UI.facet: [
+    {
+      id: 'LeaveDetails',
+      purpose: #STANDARD,
+      type: #IDENTIFICATION_REFERENCE,
+      label: 'Leave Details',
+      position: 10
+    }
+  ]
+
+  @UI.hidden: true
+  ReqId;
+
+  @UI.hidden: true
+  EmpId;
+
+  @UI: {
+    lineItem:       [ { position: 10, label: 'Leave Type' } ],
+    identification: [ { position: 10, label: 'Leave Type' } ]
+  }
+  LeaveType;
+
+  @UI: {
+    lineItem:       [ { position: 20, label: 'Start Date' } ],
+    identification: [ { position: 20, label: 'Start Date' } ]
+  }
+  StartDate;
+
+  @UI: {
+    lineItem:       [ { position: 30, label: 'End Date' } ],
+    identification: [ { position: 30, label: 'End Date' } ]
+  }
+  EndDate;
+
+  @UI: {
+    lineItem:       [ { position: 40, label: 'Days' } ],
+    identification: [ { position: 40, label: 'Days' } ]
+  }
+  NumberOfDays;
+
+  @UI: {
+    lineItem:       [ { position: 50, label: 'Reason' } ],
+    identification: [ { position: 50, label: 'Reason' } ]
+  }
+  Reason;
+
+  @UI: {
+    lineItem:       [ { position: 60, label: 'Status' } ],
+    identification: [ { position: 60, label: 'Status' } ]
+  }
+  Status;
+}

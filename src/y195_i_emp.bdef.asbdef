@@ -1,0 +1,76 @@
+managed implementation in class zbp_y1915_i_emp unique;
+strict ( 2 );
+with draft;
+
+define behavior for Y195_I_EMP alias Employee
+persistent table y195_emp
+draft table y195_emp_d
+lock master
+total etag LastChangedAt
+authorization master ( none ) // we write none but at start instance
+etag master LastChangedAt
+{
+  create ; //( authorization : global )
+  update;
+  delete;
+
+  // Key and Mandatory fields
+  field ( readonly : update ) EmpId;
+  field ( mandatory ) EmpName, Department;
+  field ( readonly ) LastChangedAt;
+
+  association _LeaveRequests { create; with draft; }
+
+  // Draft lifecycle actions
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  mapping for y195_emp
+  {
+    EmpId = emp_id;
+    EmpName = emp_name;
+    Department = department;
+    Email = email;
+    JoiningDate = joining_date;
+    LeaveBalance = leave_balance;
+    LastChangedAt = last_changed_at;
+  }
+}
+
+define behavior for Y195_I_LEAVE_REQ alias LeaveRequest
+persistent table y195_leave_req
+draft table y195_leave_req_d
+lock dependent by _Employee
+authorization dependent by _Employee
+etag master LastChangedAt
+{
+  update;
+  delete;
+
+  field ( numbering : managed, readonly ) ReqId;
+  field ( readonly ) EmpId;
+  field ( readonly ) CreatedBy, CreatedAt, LastChangedBy, LastChangedAt;
+  field ( mandatory ) LeaveType, StartDate, EndDate;
+
+  association _Employee {with draft;}
+
+  mapping for y195_leave_req
+  {
+    ReqId         = req_id;
+    EmpId         = emp_id;
+    LeaveType     = leave_type;
+    StartDate     = start_date;
+    EndDate       = end_date;
+    NumberOfDays  = number_of_days;
+    Reason        = reason;
+    Status        = status;
+    CreatedBy     = created_by;
+    CreatedAt     = created_at;
+    LastChangedBy = last_changed_by;
+    LastChangedAt = last_changed_at;
+  }
+
+}
