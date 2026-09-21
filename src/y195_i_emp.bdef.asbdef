@@ -17,7 +17,10 @@ etag master LastChangedAt
   // Key and Mandatory fields
   field ( readonly : update ) EmpId;
   field ( mandatory ) EmpName, Department;
-  field ( readonly ) LastChangedAt;
+  field ( readonly ) LastChangedAt, LeaveBalance;
+
+//  root determination
+   determination setDefaultLeaveBalance on modify { create; }
 
   association _LeaveRequests { create; with draft; }
 
@@ -27,6 +30,7 @@ etag master LastChangedAt
   draft action Discard;
   draft action Resume;
   draft determine action Prepare;
+
 
   mapping for y195_emp
   {
@@ -53,7 +57,19 @@ etag master LastChangedAt
   field ( numbering : managed, readonly ) ReqId;
   field ( readonly ) EmpId;
   field ( readonly ) CreatedBy, CreatedAt, LastChangedBy, LastChangedAt;
+  field ( readonly ) Status , NumberOfDays;  // status and days calculated
   field ( mandatory ) LeaveType, StartDate, EndDate;
+
+//determination
+  determination setStatusToPending on modify { create; }
+  determination calculateDuration  on modify { field StartDate, EndDate; }
+  determination updateLeaveBalance  on modify { field NumberOfDays; }
+
+  // Side Effects: Triggers UI recalculation of NumberOfDays when dates change
+  side effects { field StartDate affects field NumberOfDays;
+                 field EndDate   affects field NumberOfDays;
+                 field NumberOfDays affects entity _Employee;}
+
 
   association _Employee {with draft;}
 

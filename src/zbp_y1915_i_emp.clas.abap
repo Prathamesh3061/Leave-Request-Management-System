@@ -1,15 +1,5 @@
-class ZBP_Y1915_I_EMP definition
-  public
-  abstract
-  final
-  create public .
-
-public section.
-protected section.
-private section.
+CLASS zbp_y1915_i_emp DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF y195_i_emp.
 ENDCLASS.
 
-
-
-CLASS ZBP_Y1915_I_EMP IMPLEMENTATION.
+CLASS zbp_y1915_i_emp IMPLEMENTATION.
 ENDCLASS.

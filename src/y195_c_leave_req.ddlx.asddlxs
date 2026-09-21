@@ -29,6 +29,8 @@ annotate entity Y195_C_LEAVE_REQ with
     identification: [ { position: 10, label: 'Leave Type' } ]
   }
   LeaveType;
+  
+  
 
   @UI: {
     lineItem:       [ { position: 20, label: 'Start Date' } ],
