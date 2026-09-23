@@ -8,13 +8,14 @@ define behavior for Y195_C_EMP alias Employee
   use update;
   use delete;
 
-  use association _LeaveRequests { create; with draft;}
 
   use action Edit;
   use action Activate;
   use action Discard;
   use action Resume;
   use action Prepare;
+
+   use association _LeaveRequests { create; with draft;}
 }
 
 define behavior for Y195_C_LEAVE_REQ alias LeaveRequest

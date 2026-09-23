@@ -9,7 +9,15 @@ as projection on Y195_I_LEAVE_REQ
 {
     key ReqId,
       EmpId,
+      
+      @Consumption.valueHelpDefinition: [{ 
+        entity: { 
+          name: 'Y195_I_LEAVETYPE_VH', 
+          element: 'LeaveType' 
+        } 
+      }]
       LeaveType,
+      
       StartDate,
       EndDate,
       NumberOfDays,
