@@ -2,8 +2,14 @@
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Leave Request - Interface View'
 @Metadata.ignorePropagatedAnnotations: true
+@ObjectModel.usageType:{
+  serviceQuality: #X,
+  sizeCategory: #S,
+  dataClass: #TRANSACTIONAL
+}
+
 define view entity Y195_I_LEAVE_REQ 
-as select from Y195_LEAVE_REQ
+as select from y195_leave_req
 association to parent Y195_I_EMP as _Employee
 on $projection.EmpId = _Employee.EmpId
 {
@@ -17,6 +23,14 @@ on $projection.EmpId = _Employee.EmpId
     cast( 'DAYS' as abap.unit( 3 ) ) as UnitOfMeasure,
     reason as Reason,
     status as Status,
+    
+    // Semantic Color: 3 = Green (Approved), 2 = Orange (Pending), 1 = Red (Rejected)
+      case status
+        when 'APPROVED' then 3
+        when 'PENDING'  then 2
+        when 'REJECTED' then 1
+        else 0
+      end             as StatusCriticality,
     
     
 // Administrative and Concurrency fields

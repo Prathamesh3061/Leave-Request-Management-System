@@ -137,6 +137,15 @@ CLASS lhc_leaverequest DEFINITION INHERITING FROM cl_abap_behavior_handler.
     METHODS validateOverlappingLeaves FOR VALIDATE ON SAVE
       IMPORTING keys FOR LeaveRequest~validateOverlappingLeaves.
 
+
+    METHODS approveLeave FOR MODIFY
+      IMPORTING keys FOR ACTION LeaveRequest~approveLeave RESULT result.
+
+    METHODS rejectLeave FOR MODIFY
+      IMPORTING keys FOR ACTION LeaveRequest~rejectLeave RESULT result.
+
+    METHODS get_instance_features FOR INSTANCE FEATURES
+      IMPORTING keys REQUEST requested_features FOR LeaveRequest RESULT result.
 ENDCLASS.
 
 CLASS lhc_leaverequest IMPLEMENTATION.
@@ -441,6 +450,85 @@ METHOD updateLeaveBalance.
       ENDLOOP.
 
     ENDLOOP.
+
+  ENDMETHOD.
+
+  " -------------------------------------------------------------------------
+  " Action: Approve Leave
+  " -------------------------------------------------------------------------
+  METHOD approveLeave.
+
+    MODIFY ENTITIES OF y195_i_emp IN LOCAL MODE
+      ENTITY LeaveRequest
+        UPDATE FIELDS ( Status )
+        WITH VALUE #( FOR key IN keys (
+                        %tky            = key-%tky
+                        Status          = 'APPROVED'
+                        %control-Status = if_abap_behv=>mk-on
+                     ) )
+      FAILED failed
+      REPORTED reported.
+
+    READ ENTITIES OF y195_i_emp IN LOCAL MODE
+      ENTITY LeaveRequest
+        ALL FIELDS WITH CORRESPONDING #( keys )
+      RESULT DATA(lt_leave_requests).
+
+    result = VALUE #( FOR req IN lt_leave_requests (
+                        %tky   = req-%tky
+                        %param = req
+                     ) ).
+
+  ENDMETHOD.
+
+  " -------------------------------------------------------------------------
+  " Action: Reject Leave
+  " -------------------------------------------------------------------------
+  METHOD rejectLeave.
+
+    MODIFY ENTITIES OF y195_i_emp IN LOCAL MODE
+      ENTITY LeaveRequest
+        UPDATE FIELDS ( Status )
+        WITH VALUE #( FOR key IN keys (
+                        %tky            = key-%tky
+                        Status          = 'REJECTED'
+                        %control-Status = if_abap_behv=>mk-on
+                     ) )
+      FAILED failed
+      REPORTED reported.
+
+    READ ENTITIES OF y195_i_emp IN LOCAL MODE
+      ENTITY LeaveRequest
+        ALL FIELDS WITH CORRESPONDING #( keys )
+      RESULT DATA(lt_leave_requests).
+
+    result = VALUE #( FOR req IN lt_leave_requests (
+                        %tky   = req-%tky
+                        %param = req
+                     ) ).
+
+  ENDMETHOD.
+
+  " -------------------------------------------------------------------------
+  " Dynamic Feature Control: Enable/Disable Buttons based on Status
+  " -------------------------------------------------------------------------
+  METHOD get_instance_features.
+
+    READ ENTITIES OF y195_i_emp IN LOCAL MODE
+      ENTITY LeaveRequest
+        FIELDS ( Status )
+        WITH VALUE #( FOR key IN keys ( %tky = key-%tky ) )
+      RESULT DATA(lt_leave_requests).
+
+    result = VALUE #( FOR req IN lt_leave_requests (
+      %tky                   = req-%tky
+      %action-approveLeave   = COND #( WHEN req-Status = 'APPROVED' OR req-Status = 'REJECTED'
+                                       THEN if_abap_behv=>fc-o-disabled
+                                       ELSE if_abap_behv=>fc-o-enabled )
+      %action-rejectLeave    = COND #( WHEN req-Status = 'REJECTED'
+                                       THEN if_abap_behv=>fc-o-disabled
+                                       ELSE if_abap_behv=>fc-o-enabled )
+    ) ).
 
   ENDMETHOD.
 

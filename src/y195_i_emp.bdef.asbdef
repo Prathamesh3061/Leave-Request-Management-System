@@ -73,6 +73,10 @@ etag master LastChangedAt
   field ( readonly ) Status , NumberOfDays;  // status and days calculated
   field ( mandatory ) LeaveType, StartDate, EndDate;
 
+  // Actions for Status Lifecycle
+  action ( features : instance ) approveLeave result [1] $self;
+  action ( features : instance ) rejectLeave  result [1] $self;
+
 //determination
   determination setStatusToPending on modify { create; }
   determination calculateDuration  on modify { field StartDate, EndDate; }
@@ -86,7 +90,10 @@ validation validateDates             on save { field StartDate, EndDate; create;
   // Side Effects: Triggers UI recalculation of NumberOfDays when dates change
   side effects { field StartDate affects field NumberOfDays;
                  field EndDate   affects field NumberOfDays;
-                 field NumberOfDays affects entity _Employee;}
+                 field NumberOfDays affects entity _Employee;
+                 field Status       affects entity _Employee;
+    action approveLeave affects entity _Employee, $self;
+    action rejectLeave  affects entity _Employee, $self;}
 
 
   association _Employee {with draft;}

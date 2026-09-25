@@ -23,5 +23,8 @@ define behavior for Y195_C_LEAVE_REQ alias LeaveRequest
   use update;
   use delete;
 
+  use action approveLeave;
+  use action rejectLeave;
+
   use association _Employee {with draft; }
 }

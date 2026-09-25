@@ -24,6 +24,7 @@ as projection on Y195_I_LEAVE_REQ
       UnitOfMeasure,
       Reason,
       Status,
+      StatusCriticality,
       CreatedBy,
       CreatedAt,
       LastChangedBy,

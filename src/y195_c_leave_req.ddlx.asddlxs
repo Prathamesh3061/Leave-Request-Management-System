@@ -23,6 +23,9 @@ annotate entity Y195_C_LEAVE_REQ with
 
   @UI.hidden: true
   EmpId;
+  
+  @UI.hidden: true
+  StatusCriticality;
 
   @UI: {
     lineItem:       [ { position: 10, label: 'Leave Type' } ],
@@ -56,9 +59,47 @@ annotate entity Y195_C_LEAVE_REQ with
   }
   Reason;
 
-  @UI: {
-    lineItem:       [ { position: 60, label: 'Status' } ],
-    identification: [ { position: 60, label: 'Status' } ]
+@UI: {
+    lineItem: [
+      { 
+        position: 60, 
+        label: 'Status', 
+        criticality: 'StatusCriticality',
+        criticalityRepresentation: #WITHOUT_ICON 
+      },
+      { 
+        type: #FOR_ACTION, 
+        dataAction: 'approveLeave', 
+        label: 'Approve', 
+        position: 10 
+      },
+      { 
+        type: #FOR_ACTION, 
+        dataAction: 'rejectLeave', 
+        label: 'Reject', 
+        position: 20 
+      }
+    ],
+    identification: [
+      { 
+        position: 60, 
+        label: 'Status', 
+        criticality: 'StatusCriticality',
+        criticalityRepresentation: #WITHOUT_ICON 
+      },
+      { 
+        type: #FOR_ACTION, 
+        dataAction: 'approveLeave', 
+        label: 'Approve', 
+        position: 10 
+      },
+      { 
+        type: #FOR_ACTION, 
+        dataAction: 'rejectLeave', 
+        label: 'Reject', 
+        position: 20 
+      }
+    ]
   }
   Status;
 }
